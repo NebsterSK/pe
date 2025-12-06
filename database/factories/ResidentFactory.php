@@ -14,7 +14,7 @@ class ResidentFactory extends Factory
     {
         return [
             'name' => $this->faker->name(),
-            'birth_year' => $this->faker->numberBetween(1, 100) . $this->faker->randomElement([' BBY', ' ABY']),
+            'birth_year' => $this->faker->numberBetween(1, 100) . $this->faker->randomElement(['BBY', 'ABY']),
             'eye_color' => $this->faker->randomElement(['blue', 'green', 'brown', 'yellow', 'red', 'black', 'unknown', 'n/a']),
             'gender' => $this->faker->randomElement(['Male', 'Female', 'unknown', 'n/a']),
             'hair_color' => $this->faker->randomElement(['black', 'brown', 'blonde', 'red', 'grey', 'white', 'unknown', 'n/a']),

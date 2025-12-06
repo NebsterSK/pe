@@ -30,8 +30,8 @@ class SyncCommand extends Command
             try {
                 $response = Http::acceptJson()->get($url)->json();
             } catch (Throwable $e) {
-                $this->error('Failed to fetch Planets from SWAPI URL: ' . $url);
-                Log::error('Failed to fetch Planets from SWAPI', [
+                $this->error('Failed to fetch Planets from URL: ' . $url);
+                Log::error('Failed to fetch Planets', [
                     'exception_message' => $e->getMessage(),
                     'exception_file' => $e->getFile(),
                     'exception_line' => $e->getLine(),
@@ -80,8 +80,8 @@ class SyncCommand extends Command
             try {
                 $response = Http::acceptJson()->get($url)->json();
             } catch (Throwable $e) {
-                $this->error('Failed to fetch Residents from SWAPI URL: ' . $url);
-                Log::error('Failed to fetch Residents from SWAPI', [
+                $this->error('Failed to fetch Residents from URL: ' . $url);
+                Log::error('Failed to fetch Residents', [
                     'exception_message' => $e->getMessage(),
                     'exception_file' => $e->getFile(),
                     'exception_line' => $e->getLine(),
@@ -113,8 +113,8 @@ class SyncCommand extends Command
 
                 $this->line('Resident with ID ' . $resident->id . ' - "' . $resident->name . '" synced.');
                 Log::info('Resident synced', [
-                    'planet_id' => $resident->id,
-                    'planet_name' => $resident->name,
+                    'resident_id' => $resident->id,
+                    'resident_name' => $resident->name,
                     'command' => $this->getName(),
                 ]);
             }
