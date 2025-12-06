@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
-@section('title', 'Home')
+@section('title', 'Dashboard')
 
 @section('content')
 <div class="container">
-    <p>Logged in!</p>
+    <p>Dashboard</p>
 </div>
 @endsection
