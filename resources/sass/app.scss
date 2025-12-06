@@ -1,0 +1,12 @@
+// FontAwesome
+$fa-font-path: '/build/webfonts';
+@use '@fortawesome/fontawesome-free/scss/fontawesome';
+@use '@fortawesome/fontawesome-free/scss/regular';
+@use '@fortawesome/fontawesome-free/scss/solid';
+@use '@fortawesome/fontawesome-free/scss/brands';
+
+// Variables
+@use 'variables';
+
+// Bootstrap
+@use 'fastbootstrap/src/scss/fastbootstrap';
