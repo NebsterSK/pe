@@ -17,6 +17,6 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@example.com',
         ]);
 
-        $this->call(PlanetSeeder::class);
+//        $this->call(PlanetSeeder::class);
     }
 }
