@@ -1,11 +1,13 @@
 ### Index
 GET {{ app_url }}/logbook/entries
 Accept: application/json
+Authorization: Bearer {{ token }}
 
 ### Store
 POST {{ app_url }}/logbook/entries
 Accept: application/json
 Content-Type: application/json
+Authorization: Bearer {{ token }}
 
 {
     "mood": "ok",
