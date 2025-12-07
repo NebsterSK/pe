@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
         $admin = User::factory()->create([
             'name' => 'Admin',
             'email' => 'admin@example.com',
+            // Password: password
         ]);
 
         DB::table('personal_access_tokens')->insert([

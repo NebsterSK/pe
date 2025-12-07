@@ -12,6 +12,4 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
 
     Route::get('/planets', PlanetController::class)->name('planets.index');
-
-    // TODO: Planets, Residents & Logbook
 });
