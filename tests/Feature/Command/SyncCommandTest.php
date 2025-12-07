@@ -26,4 +26,4 @@ test('command imports planets and residents', function () {
     $this->assertDatabaseHas('residents', [
         'name' => $residentsData['results'][0]['name'],
     ]);
-});
+})->group('command');

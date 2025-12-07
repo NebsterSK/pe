@@ -11,6 +11,9 @@
 |
 */
 
+use App\Enums\Mood;
+use App\Enums\Weather;
+
 pest()->extend(Tests\TestCase::class)
     ->use(Illuminate\Foundation\Testing\LazilyRefreshDatabase::class)
     ->in('Feature');

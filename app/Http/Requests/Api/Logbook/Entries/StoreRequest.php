@@ -36,10 +36,12 @@ class StoreRequest extends FormRequest
                 'required',
                 'integer',
                 'min:0',
+                'max:65535',
             ],
             'note' => [
                 'required',
                 'string',
+                'min:1',
                 'max:65535',
             ],
         ];
