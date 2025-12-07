@@ -8,5 +8,7 @@ Route::view('/', 'index')->name('index');
 Auth::routes();
 
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', DashboardController::class)->name('dashboard');
+
+    // TODO: Planets, Residents & Logbook
 });

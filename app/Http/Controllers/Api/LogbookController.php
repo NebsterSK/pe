@@ -18,7 +18,7 @@ class LogbookController extends Controller
 {
     public function index(): AnonymousResourceCollection
     {
-        $entries = Entry::orderBy('created_at', 'desc')->get();
+        $entries = Entry::orderBy('id', 'desc')->get();
 
         return EntryResource::collection($entries);
     }
@@ -41,7 +41,7 @@ class LogbookController extends Controller
                 'exception_message' => $e->getMessage(),
                 'exception_file' => $e->getFile(),
                 'exception_line' => $e->getLine(),
-                //            'user_id' => Auth::user()->id,
+                'user_id' => Auth::user()->id,
             ]);
 
             abort(Response::HTTP_BAD_REQUEST);
@@ -49,7 +49,7 @@ class LogbookController extends Controller
 
         Log::info('Logbook Entry created', [
             'entry_id' => $entry->id,
-//            'user_id' => Auth::user()->id,
+            'user_id' => Auth::user()->id,
         ]);
 
         return new EntryResource($entry);

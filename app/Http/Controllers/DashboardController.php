@@ -6,8 +6,10 @@ use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
-    public function index(): View
+    public function __invoke(): View
     {
+        // TODO: Stats
+
         return view('dashboard');
     }
 }
