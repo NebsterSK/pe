@@ -18,10 +18,10 @@ Command `php artisan sync` in `app/Console/Commands/SyncCommand.php` will sync P
 
 ## Logbook API
 
-File `_dev/logbook.http` contains example requests for Logbook API.
-
-*May the Force be with you!*
+File `_dev/api/logbook.http` contains example requests for Logbook API.
 
 ## Tests
 
 Run `php artisan test` to execute the tests.
+
+*Do or do not, there is no try.*
