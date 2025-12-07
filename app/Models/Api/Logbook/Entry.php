@@ -4,8 +4,10 @@ namespace App\Models\Api\Logbook;
 
 use App\Enums\Mood;
 use App\Enums\Weather;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Crypt;
 
 /**
  * @property int $id
@@ -39,10 +41,52 @@ class Entry extends Model
 
     protected $table = 'logbook_entries';
 
-    protected $casts = [
-        'mood' => Mood::class,
-        'weather' => Weather::class,
-        'latitude' => 'float',
-        'longitude' => 'float',
-    ];
+    // Attributes (for encryption)
+    protected function mood(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value): Mood => Mood::from(Crypt::decrypt($value)),
+            set: fn (Mood $value) => Crypt::encrypt($value->value),
+        );
+    }
+
+    protected function weather(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value): Weather => Weather::from(Crypt::decrypt($value)),
+            set: fn (Weather $value) => Crypt::encrypt($value->value),
+        );
+    }
+
+    protected function latitude(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value): float => (float) Crypt::decrypt($value),
+            set: fn (float $value) => Crypt::encrypt($value),
+        );
+    }
+
+    protected function longitude(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value): float => (float) Crypt::decrypt($value),
+            set: fn (float $value) => Crypt::encrypt($value),
+        );
+    }
+
+    protected function suppliesForDays(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value): int => (int) Crypt::decrypt($value),
+            set: fn (int $value) => Crypt::encrypt($value),
+        );
+    }
+
+    protected function note(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value): string => Crypt::decrypt($value),
+            set: fn (string $value) => Crypt::encrypt($value),
+        );
+    }
 }

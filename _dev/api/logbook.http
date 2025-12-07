@@ -1,4 +1,9 @@
-POST https://pe.test/api/logbook/entries
+### Index
+GET {{ app_url }}/logbook/entries
+Accept: application/json
+
+### Store
+POST {{ app_url }}/logbook/entries
 Accept: application/json
 Content-Type: application/json
 
@@ -8,5 +13,5 @@ Content-Type: application/json
     "latitude": 30,
     "longitude": 60,
     "supplies_for_days": 30,
-    "note": "This is a test logbook entry."
+    "note": "Fear is the path to the dark side. Fear leads to anger. Anger leads to hate. Hate leads to suffering."
 }

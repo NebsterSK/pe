@@ -10,12 +10,12 @@ return new class extends Migration
     {
         Schema::create('logbook_entries', function (Blueprint $table) {
             $table->id();
-            $table->enum('mood', ['ok', 'happy', 'sad', 'depressed', 'determined', 'tired', 'energized'])->nullable(false);
-            $table->enum('weather', ['clear', 'sunny', 'cloudy', 'rainy', 'stormy', 'snowy', 'windy'])->nullable(false);
-            $table->decimal('latitude', 10, 8)->nullable(false);
-            $table->decimal('longitude', 11, 8)->nullable(false);
-            $table->integer('supplies_for_days')->nullable(false)->unsigned()->comment('Number of days until supplies run out.');
-            $table->string('note')->nullable(false);
+            $table->text('mood')->nullable(false);
+            $table->text('weather')->nullable(false);
+            $table->text('latitude')->nullable(false);
+            $table->text('longitude')->nullable(false);
+            $table->text('supplies_for_days')->nullable(false)->comment('Number of days until supplies run out.');
+            $table->text('note')->nullable(false);
             $table->timestamps();
         });
     }
