@@ -1,0 +1,12 @@
+POST https://pe.test/api/logbook/entries
+Accept: application/json
+Content-Type: application/json
+
+{
+    "mood": "ok",
+    "weather": "sunny",
+    "latitude": 30,
+    "longitude": 60,
+    "supplies_for_days": 30,
+    "note": "This is a test logbook entry."
+}

@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $gender The gender of this person. Either "Male", "Female" or "unknown", "n/a" if the person does not have a gender.
  * @property string $hair_color The hair color of this person. Will be "unknown" if not known or "n/a" if the person does not have hair.
  * @property int $height The height of the person in centimeters.
- * @property int $mass The height of the person in centimeters.
+ * @property int $mass The mass of the person in kilograms.
  * @property string $skin_color The skin color of this person.
  * @property int $planet_id
  * @property \Illuminate\Support\Carbon|null $created_at
