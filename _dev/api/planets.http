@@ -1,0 +1,4 @@
+### Largest
+GET {{ app_url }}/planets/largest
+Accept: application/json
+Authorization: Bearer {{ token }}

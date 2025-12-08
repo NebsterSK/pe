@@ -1,7 +1,10 @@
 <?php
 
 use App\Http\Controllers\Api\LogbookController;
+use App\Http\Controllers\Api\PlanetController;
 
-Route::resource('/logbook/entries', LogbookController::class)->only(['index', 'store'])->middleware('auth:sanctum')->names('api.logbook.entries');
+Route::middleware('auth:sanctum')->name('api.')->group(function () {
+    Route::resource('/logbook/entries', LogbookController::class)->only(['index', 'store'])->names('logbook.entries');
 
-// TODO: Planets
+    Route::get('/planets/largest', [PlanetController::class, 'largest'])->name('planets.largest');
+});

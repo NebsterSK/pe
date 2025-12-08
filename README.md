@@ -16,9 +16,9 @@ This old system connected to the internet will help you find out where in the un
 
 Command `php artisan sync` in `app/Console/Commands/SyncCommand.php` will sync Planets & Residents data from external API and store them in your database.
 
-## Logbook API
+## API
 
-File `_dev/api/logbook.http` contains example requests for Logbook API.
+Files in `_dev/api` contain example requests for API.
 
 ## Tests
 

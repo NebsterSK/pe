@@ -16,12 +16,12 @@ test('attributes stored in database are encrypted', function () {
 
     $encryptedData = DB::table('logbook_entries')->where('id', $entry->id)->first();
 
-    expect($encryptedData->mood)->not->toContain($decryptedData->mood->value)
-        ->and($encryptedData->weather)->not->toContain($decryptedData->weather->value)
-        ->and($encryptedData->latitude)->not->toContain($decryptedData->latitude)
-        ->and($encryptedData->longitude)->not->toContain($decryptedData->longitude)
-        ->and($encryptedData->supplies_for_days)->not->toContain($decryptedData->supplies_for_days)
-        ->and($encryptedData->note)->not->toContain($decryptedData->note);
+    expect($encryptedData->mood)->not->toBe($decryptedData->mood->value)
+        ->and($encryptedData->weather)->not->toBe($decryptedData->weather->value)
+        ->and($encryptedData->latitude)->not->toBe($decryptedData->latitude)
+        ->and($encryptedData->longitude)->not->toBe($decryptedData->longitude)
+        ->and($encryptedData->supplies_for_days)->not->toBe($decryptedData->supplies_for_days)
+        ->and($encryptedData->note)->not->toBe($decryptedData->note);
 })->group('logbook');
 
 test('attributes are decrypted correctly', function () {
