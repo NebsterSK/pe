@@ -8,9 +8,9 @@ test('unauthenticated user cannot access endpoints', function () {
 })->group('api', 'planets');
 
 // Theoretical test, check that User without correct permissions cannot access endpoints
-//test('unauthorized user cannot access endpoints', function () {
+// test('unauthorized user cannot access endpoints', function () {
 //
-//})->group('api', 'logbook');
+// })->group('api', 'logbook');
 
 test('largest endpoint returns list of 10 largest planets', function () {
     $user = User::factory()->create();

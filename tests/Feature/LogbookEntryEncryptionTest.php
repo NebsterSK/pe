@@ -47,5 +47,3 @@ test('attributes are decrypted correctly', function () {
         ->and($reloadedEntry->supplies_for_days)->toBe($decryptedData->supplies_for_days)
         ->and($reloadedEntry->note)->toBe($decryptedData->note);
 })->group('logbook');
-
-

@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Crypt;
  * @property string $note
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ *
  * @method static \Database\Factories\Api\Logbook\EntryFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Entry newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Entry newQuery()
@@ -32,6 +33,7 @@ use Illuminate\Support\Facades\Crypt;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Entry whereSuppliesForDays($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Entry whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Entry whereWeather($value)
+ *
  * @mixin \Eloquent
  */
 class Entry extends Model

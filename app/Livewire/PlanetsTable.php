@@ -2,9 +2,9 @@
 
 namespace App\Livewire;
 
+use App\Models\Planet;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use App\Models\Planet;
 
 class PlanetsTable extends DataTableComponent
 {
@@ -23,39 +23,39 @@ class PlanetsTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make("Id", "id")
+            Column::make('Id', 'id')
                 ->format(fn ($value) => number_format($value, 0, ',', ' '))
                 ->sortable()
                 ->searchable(),
-            Column::make("Name", "name")
+            Column::make('Name', 'name')
                 ->sortable()
                 ->searchable(),
-            Column::make("Diameter (km)", "diameter")
+            Column::make('Diameter (km)', 'diameter')
                 ->format(fn ($value) => number_format($value, 0, ',', ' '))
                 ->sortable()
                 ->searchable(),
-            Column::make("Rotation period (hour)", "rotation_period")
+            Column::make('Rotation period (hour)', 'rotation_period')
                 ->format(fn ($value) => number_format($value, 0, ',', ' '))
                 ->sortable()
                 ->searchable(),
-            Column::make("Orbital period (day)", "orbital_period")
+            Column::make('Orbital period (day)', 'orbital_period')
                 ->format(fn ($value) => number_format($value, 0, ',', ' '))
                 ->sortable()
                 ->searchable(),
-            Column::make("Gravity", "gravity")
+            Column::make('Gravity', 'gravity')
                 ->sortable()
                 ->searchable(),
-            Column::make("Population", "population")
+            Column::make('Population', 'population')
                 ->format(fn ($value) => number_format($value, 0, ',', ' '))
                 ->sortable()
                 ->searchable(),
-            Column::make("Climate", "climate")
+            Column::make('Climate', 'climate')
                 ->sortable()
                 ->searchable(),
-            Column::make("Terrain", "terrain")
+            Column::make('Terrain', 'terrain')
                 ->sortable()
                 ->searchable(),
-            Column::make("Surface water (%)", "surface_water")
+            Column::make('Surface water (%)', 'surface_water')
                 ->sortable()
                 ->searchable(),
         ];

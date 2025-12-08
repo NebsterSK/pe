@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Planet $planet
+ *
  * @method static \Database\Factories\ResidentFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Resident newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Resident newQuery()
@@ -36,6 +37,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Resident wherePlanetId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Resident whereSkinColor($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Resident whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  */
 class Resident extends Model

@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Resident> $residents
  * @property-read int|null $residents_count
+ *
  * @method static \Database\Factories\PlanetFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Planet newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Planet newQuery()
@@ -37,6 +38,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Planet whereSurfaceWater($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Planet whereTerrain($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Planet whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  */
 class Planet extends Model

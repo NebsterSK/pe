@@ -11,9 +11,9 @@ test('unauthenticated user cannot access endpoints', function () {
 })->group('api', 'logbook');
 
 // Theoretical test, check that User without correct permissions cannot access endpoints
-//test('unauthorized user cannot access endpoints', function () {
+// test('unauthorized user cannot access endpoints', function () {
 //
-//})->group('api', 'logbook');
+// })->group('api', 'logbook');
 
 test('index endpoint returns list of logbook entries', function () {
     $user = User::factory()->create();

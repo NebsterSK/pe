@@ -11,9 +11,6 @@
 |
 */
 
-use App\Enums\Mood;
-use App\Enums\Weather;
-
 pest()->extend(Tests\TestCase::class)
     ->use(Illuminate\Foundation\Testing\LazilyRefreshDatabase::class)
     ->in('Feature');
@@ -37,7 +34,7 @@ function planetsData(): array
         'previous' => null,
         'results' => [
             [
-                'url' => config('services.swapi.base_url') . '/planets/1/',
+                'url' => config('services.swapi.base_url').'/planets/1/',
                 'name' => fake()->colorName(),
                 'diameter' => (string) fake()->numberBetween(1_000, 50_000),
                 'rotation_period' => (string) fake()->numberBetween(10, 1_000),
@@ -49,7 +46,7 @@ function planetsData(): array
                 'surface_water' => (string) fake()->numberBetween(0, 100),
             ],
             [
-                'url' => config('services.swapi.base_url') . '/planets/2/',
+                'url' => config('services.swapi.base_url').'/planets/2/',
                 'name' => fake()->colorName(),
                 'diameter' => (string) fake()->numberBetween(1_000, 50_000),
                 'rotation_period' => (string) fake()->numberBetween(10, 1_000),
@@ -72,28 +69,28 @@ function residentsData(): array
         'previous' => null,
         'results' => [
             [
-                'url' => config('services.swapi.base_url') . '/people/1/',
+                'url' => config('services.swapi.base_url').'/people/1/',
                 'name' => fake()->name(),
-                'birth_year' => fake()->numberBetween(1, 100) . fake()->randomElement(['BBY', 'ABY']),
+                'birth_year' => fake()->numberBetween(1, 100).fake()->randomElement(['BBY', 'ABY']),
                 'eye_color' => fake()->randomElement(['blue', 'green', 'brown', 'yellow', 'red', 'black', 'unknown', 'n/a']),
                 'gender' => fake()->randomElement(['Male', 'Female', 'unknown', 'n/a']),
                 'hair_color' => fake()->randomElement(['black', 'brown', 'blonde', 'red', 'grey', 'white', 'unknown', 'n/a']),
                 'height' => (string) fake()->numberBetween(1, 300),
                 'mass' => (string) fake()->numberBetween(1, 300),
                 'skin_color' => fake()->randomElement(['fair', 'light', 'dark', 'green', 'blue', 'red', 'unknown']),
-                'homeworld' => config('services.swapi.base_url') . '/planets/1/',
+                'homeworld' => config('services.swapi.base_url').'/planets/1/',
             ],
             [
-                'url' => config('services.swapi.base_url') . '/people/2/',
+                'url' => config('services.swapi.base_url').'/people/2/',
                 'name' => fake()->name(),
-                'birth_year' => fake()->numberBetween(1, 100) . fake()->randomElement(['BBY', 'ABY']),
+                'birth_year' => fake()->numberBetween(1, 100).fake()->randomElement(['BBY', 'ABY']),
                 'eye_color' => fake()->randomElement(['blue', 'green', 'brown', 'yellow', 'red', 'black', 'unknown', 'n/a']),
                 'gender' => fake()->randomElement(['Male', 'Female', 'unknown', 'n/a']),
                 'hair_color' => fake()->randomElement(['black', 'brown', 'blonde', 'red', 'grey', 'white', 'unknown', 'n/a']),
                 'height' => (string) fake()->numberBetween(1, 300),
                 'mass' => (string) fake()->numberBetween(1, 300),
                 'skin_color' => fake()->randomElement(['fair', 'light', 'dark', 'green', 'blue', 'red', 'unknown']),
-                'homeworld' => config('services.swapi.base_url') . '/planets/2/',
+                'homeworld' => config('services.swapi.base_url').'/planets/2/',
             ],
         ],
     ];
