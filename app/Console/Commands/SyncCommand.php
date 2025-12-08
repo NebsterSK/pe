@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Planet;
-use App\Models\Resident;
 use Illuminate\Console\Command;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -12,9 +12,16 @@ use Throwable;
 
 class SyncCommand extends Command
 {
-    protected $signature = 'sync';
+    /**
+     * Ak by podla zadania zoznam planet a rezidentov bol v milionoch, pouzil by som ?perPage s hodnotu 1 000 - 10 000 a upsert threshold s hodnotou 10 000 - 50 000.
+     */
+    public const int UPSERT_THRESHOLD = 10;
 
-    protected $description = 'Sync data of all planets and residents from SWAPI to local database.';
+    protected $signature = 'sync';
+    protected $description = 'Sync data of all Planets and Residents from SWAPI to local database.';
+
+    protected int $planetsSynced = 0;
+    protected int $residentsSynced = 0;
 
     public function handle(): int
     {
@@ -24,11 +31,17 @@ class SyncCommand extends Command
         ]);
 
         // Planets
-        $url = config('services.swapi.base_url').'/planets';
+        $baseUrl = config('services.swapi.base_url').'/planets';
+        $page = 1;
+
+        $data = [];
+        $dataCount = 0;
 
         do {
+            $url = $baseUrl.'?page='.$page;
+
             try {
-                $response = Http::acceptJson()->get($url)->json();
+                $response = Http::acceptJson()->get($url);
             } catch (Throwable $e) {
                 $this->error('Failed to fetch Planets from URL: '.$url);
                 Log::error('Failed to fetch Planets', [
@@ -39,46 +52,79 @@ class SyncCommand extends Command
                     'command' => $this->getName(),
                 ]);
 
-                return self::FAILURE;
+                $page++;
+
+                continue;
             }
 
-            $url = $response['next'];
+            $page++;
 
-            foreach ($response['results'] as $planetData) {
-                $planetId = Str::of($planetData['url'])->after(config('services.swapi.base_url').'/planets/')->before('/')->toInteger();
+            foreach ($response->json()['results'] ?? [] as $planetData) {
+                $data[] = $this->preparePlanetData($planetData);
+                $dataCount++;
+                $this->planetsSynced++;
 
-                try {
-                    $planet = $this->upsertPlanet($planetId, $planetData);
-                } catch (Throwable $e) {
-                    $this->error('Failed to upsert Planet with ID '.$planetId.' - "'.$planetData['name']);
-                    Log::error('Failed to upsert Planet', [
-                        'exception_message' => $e->getMessage(),
-                        'exception_file' => $e->getFile(),
-                        'exception_line' => $e->getLine(),
+                // Upsert data by threshold
+                if ($dataCount >= self::UPSERT_THRESHOLD) {
+                    try {
+                        $this->upsertPlanetData($data);
+                    } catch (Throwable $e) {
+                        $this->error('Failed to sync Planets');
+                        Log::error('Failed to sync Planets', [
+                            'exception_message' => $e->getMessage(),
+                            'exception_file' => $e->getFile(),
+                            'exception_line' => $e->getLine(),
+                            'command' => $this->getName(),
+                        ]);
+
+                        continue;
+                    }
+
+                    $this->line('Planets synced: '.$dataCount);
+                    Log::info('Planets synced', [
+                        'count' => $dataCount,
                         'command' => $this->getName(),
                     ]);
 
-                    continue;
+                    $data = [];
+                    $dataCount = 0;
                 }
+            }
+        } while ($response->status() !== Response::HTTP_NOT_FOUND);
 
-                $this->line('Planet with ID '.$planet->id.' - "'.$planet->name.'" synced.');
-                Log::info('Planet synced', [
-                    'planet_id' => $planet->id,
-                    'planet_name' => $planet->name,
+        // Upsert remaining data that didn't reach the threshold
+        if ($dataCount > 0) {
+            try {
+                $this->upsertPlanetData($data);
+            } catch (Throwable $e) {
+                $this->error('Failed to sync Planets');
+                Log::error('Failed to sync Planets', [
+                    'exception_message' => $e->getMessage(),
+                    'exception_file' => $e->getFile(),
+                    'exception_line' => $e->getLine(),
                     'command' => $this->getName(),
                 ]);
             }
-        } while ($response['next'] !== null);
 
-        $this->info('Planets synced.');
-        $this->info('Syncing Residents...');
+            $this->line('Planets synced: '.$dataCount);
+            Log::info('Planets synced', [
+                'count' => $dataCount,
+                'command' => $this->getName(),
+            ]);
+        }
 
         // Residents
-        $url = config('services.swapi.base_url').'/people';
+        $baseUrl = config('services.swapi.base_url').'/people';
+        $page = 1;
+
+        $data = [];
+        $dataCount = 0;
 
         do {
+            $url = $baseUrl.'?page='.$page;
+
             try {
-                $response = Http::acceptJson()->get($url)->json();
+                $response = Http::acceptJson()->get($url);
             } catch (Throwable $e) {
                 $this->error('Failed to fetch Residents from URL: '.$url);
                 Log::error('Failed to fetch Residents', [
@@ -89,82 +135,154 @@ class SyncCommand extends Command
                     'command' => $this->getName(),
                 ]);
 
-                return self::FAILURE;
+                $page++;
+
+                continue;
             }
 
-            $url = $response['next'];
+            $page++;
 
-            foreach ($response['results'] as $residentData) {
-                $residentId = Str::of($residentData['url'])->after(config('services.swapi.base_url').'/people/')->before('/')->toInteger();
+            foreach ($response->json()['results'] ?? [] as $residentData) {
+                $data[] = $this->prepareResidentData($residentData);
+                $dataCount++;
+                $this->residentsSynced++;
 
-                try {
-                    $resident = $this->upsertResident($residentId, $residentData);
-                } catch (Throwable $e) {
-                    $this->error('Failed to upsert Resident with ID '.$residentId.' - "'.$residentData['name']);
-                    Log::error('Failed to upsert Resident', [
-                        'exception_message' => $e->getMessage(),
-                        'exception_file' => $e->getFile(),
-                        'exception_line' => $e->getLine(),
+                // Upsert data by threshold
+                if ($dataCount >= self::UPSERT_THRESHOLD) {
+                    try {
+                        $this->upsertResidentData($data);
+                    } catch (Throwable $e) {
+                        $this->error('Failed to sync Residents');
+                        Log::error('Failed to sync Residents', [
+                            'exception_message' => $e->getMessage(),
+                            'exception_file' => $e->getFile(),
+                            'exception_line' => $e->getLine(),
+                            'command' => $this->getName(),
+                        ]);
+
+                        continue;
+                    }
+
+                    $this->line('Residents synced: '.$dataCount);
+                    Log::info('Residents synced', [
+                        'count' => $dataCount,
                         'command' => $this->getName(),
                     ]);
 
-                    continue;
+                    $data = [];
+                    $dataCount = 0;
                 }
+            }
+        } while ($response->status() !== Response::HTTP_NOT_FOUND);
 
-                $this->line('Resident with ID '.$resident->id.' - "'.$resident->name.'" synced.');
-                Log::info('Resident synced', [
-                    'resident_id' => $resident->id,
-                    'resident_name' => $resident->name,
+        // Upsert remaining data that didn't reach the threshold
+        if ($dataCount > 0) {
+            try {
+                $this->upsertResidentData($data);
+            } catch (Throwable $e) {
+                $this->error('Failed to sync Residents');
+                Log::error('Failed to sync Residents', [
+                    'exception_message' => $e->getMessage(),
+                    'exception_file' => $e->getFile(),
+                    'exception_line' => $e->getLine(),
                     'command' => $this->getName(),
                 ]);
             }
-        } while ($response['next'] !== null);
+
+            $this->line('Residents synced: '.$dataCount);
+            Log::info('Residents synced', [
+                'count' => $dataCount,
+                'command' => $this->getName(),
+            ]);
+        }
 
         $this->info('Planets & Residents sync completed.');
         Log::info('Planets & Residents sync completed', [
+            'planets_count' => $this->planetsSynced,
+            'residents_count' => $this->residentsSynced,
             'command' => $this->getName(),
         ]);
 
         return self::SUCCESS;
     }
 
-    protected function upsertPlanet(int $planetId, array $data): Planet
+    protected function preparePlanetData(array $data): array
     {
-        return Planet::updateOrCreate(
+        return [
+            'id' => Str::of($data['url'])->after(config('services.swapi.base_url').'/planets/')->before('/')->toInteger(),
+            'name' => $data['name'],
+            'diameter' => (int) $data['diameter'],
+            'rotation_period' => (int) $data['rotation_period'],
+            'orbital_period' => (int) $data['orbital_period'],
+            'gravity' => $data['gravity'],
+            'population' => (int) $data['population'],
+            'climate' => $data['climate'],
+            'terrain' => $data['terrain'],
+            'surface_water' => (int) $data['surface_water'],
+            'created_at' => now(),
+            'updated_at' => now(),
+        ];
+    }
+
+    protected function upsertPlanetData(array $data): void
+    {
+        DB::table('planets')->upsert(
+            $data,
             [
-                'id' => $planetId,
-                'name' => $data['name'],
+                'id',
             ],
             [
-                'diameter' => (int) $data['diameter'],
-                'rotation_period' => (int) $data['rotation_period'],
-                'orbital_period' => (int) $data['orbital_period'],
-                'gravity' => $data['gravity'],
-                'population' => (int) $data['population'],
-                'climate' => $data['climate'],
-                'terrain' => $data['terrain'],
-                'surface_water' => (int) $data['surface_water'],
-            ]
+                'name',
+                'diameter',
+                'rotation_period',
+                'orbital_period',
+                'gravity',
+                'population',
+                'climate',
+                'terrain',
+                'surface_water',
+                'updated_at',
+            ],
         );
     }
 
-    protected function upsertResident(int $residentId, array $data): Resident
+    protected function prepareResidentData(array $data): array
     {
-        return Resident::updateOrCreate(
+        return [
+            'id' => Str::of($data['url'])->after(config('services.swapi.base_url').'/people/')->before('/')->toInteger(),
+            'name' => $data['name'],
+            'birth_year' => $data['birth_year'],
+            'eye_color' => $data['eye_color'],
+            'gender' => $data['gender'],
+            'hair_color' => $data['hair_color'],
+            'height' => (int) $data['height'],
+            'mass' => (int) $data['mass'],
+            'skin_color' => $data['skin_color'],
+            'planet_id' => Str::of($data['homeworld'])->after(config('services.swapi.base_url').'/planets/')->before('/')->toInteger(),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ];
+    }
+
+    protected function upsertResidentData(array $data): void
+    {
+        DB::table('residents')->upsert(
+            $data,
             [
-                'id' => $residentId,
+                'id',
             ],
             [
-                'name' => $data['name'],
-                'birth_year' => $data['birth_year'],
-                'eye_color' => $data['eye_color'],
-                'gender' => $data['gender'],
-                'hair_color' => $data['hair_color'],
-                'height' => (int) $data['height'],
-                'mass' => (int) $data['mass'],
-                'skin_color' => $data['skin_color'],
-                'planet_id' => Str::of($data['homeworld'])->after(config('services.swapi.base_url').'/planets/')->before('/')->toInteger(),
-            ]
+                'name',
+                'birth_year',
+                'eye_color',
+                'gender',
+                'hair_color',
+                'height',
+                'mass',
+                'skin_color',
+                'planet_id',
+                'updated_at',
+            ],
         );
     }
 }

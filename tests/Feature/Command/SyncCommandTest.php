@@ -8,9 +8,14 @@ test('command imports planets and residents', function () {
     $residentsData = residentsData();
 
     Http::fake([
-        config('services.swapi.base_url').'/planets*' => Http::response($planetsData),
-        config('services.swapi.base_url').'/people*' => Http::response($residentsData),
+        config('services.swapi.base_url').'/planets*' => Http::sequence()
+            ->push($planetsData)
+            ->push(null, 404),
+        config('services.swapi.base_url').'/people*' => Http::sequence()
+            ->push($residentsData)
+            ->push(null, 404),
     ]);
+
 
     $this->artisan('sync')
         ->expectsOutput('Planets & Residents sync started.')
