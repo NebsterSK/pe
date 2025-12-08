@@ -75,6 +75,6 @@ their residents~~ (imagine there may be millions of them)
 
 - Sobota 5 hodin
 - Nedela 5 hodin
-- Pondelok 2 hodiny
+- Pondelok 4 hodiny
 
-**Celkovo: 12 hodin**
+**Celkovo: 14 hodin**
